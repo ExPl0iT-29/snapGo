@@ -2,6 +2,7 @@ package storage
 
 import (
     "crypto/sha256"
+    "fmt"
     "io"
     "os"
     "path/filepath"
@@ -28,4 +29,21 @@ func StoreFile(filePath string, storageDir string) (string, error) {
         return "", err
     }
     return hash, nil
+}
+
+func copyFile(src, dst string) error {
+    source, err := os.Open(src)
+    if err != nil {
+        return err
+    }
+    defer source.Close()
+
+    destination, err := os.Create(dst)
+    if err != nil {
+        return err
+    }
+    defer destination.Close()
+
+    _, err = io.Copy(destination, source)
+    return err
 }
